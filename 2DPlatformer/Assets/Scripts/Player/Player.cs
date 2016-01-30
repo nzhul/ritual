@@ -52,6 +52,7 @@ public class Player : MonoBehaviour {
 		maxJumpVelocity = Mathf.Abs(gravity * timeToJumpApex);
 		minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 		controller.OnEnemyCollision += OnEnemyCollision;
+		controller.OnCollectableCollision += OnCollectableCollision;
 
 		// TODO: Update enemies list on Update method but with Enumerator on every 1-2 seconds
 		// TODO: We may not need to update the list on every frame but just to find the new closest enemy.
@@ -76,6 +77,11 @@ public class Player : MonoBehaviour {
 	void OnEnemyCollision()
 	{
 		Debug.Log("Enemy collision");
+	}
+
+	void OnCollectableCollision()
+	{
+		Debug.Log("Collectable collision");
 	}
 
 	void Update()
@@ -145,29 +151,20 @@ public class Player : MonoBehaviour {
 		{
 			if (wallSliding)
 			{
-				if (abilityManager.Abilities["WallJump"].IsUnlocked)
+				if (wallDirX == input.x)
 				{
-					if (wallDirX == input.x)
-					{
-						velocity.x = -wallDirX * wallJumpClimb.x;
-						velocity.y = wallJumpClimb.y;
-					}
-					else if (input.x == 0)
-					{
-						velocity.x = -wallDirX * wallJumpOff.x;
-						velocity.y = wallJumpOff.y;
-					}
-					else
-					{
-						velocity.x = -wallDirX * wallLeap.x;
-						velocity.y = wallLeap.y;
-					}
+					velocity.x = -wallDirX * wallJumpClimb.x;
+					velocity.y = wallJumpClimb.y;
 				}
-
-				if (!abilityManager.Abilities["WallJump"].IsUnlocked)
+				else if (input.x == 0)
 				{
 					velocity.x = -wallDirX * wallJumpOff.x;
 					velocity.y = wallJumpOff.y;
+				}
+				else
+				{
+					velocity.x = -wallDirX * wallLeap.x;
+					velocity.y = wallLeap.y;
 				}
 			}
 

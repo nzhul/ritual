@@ -12,7 +12,6 @@ public class Projectile : MonoBehaviour {
 	public float speed = 10;
 	public float damage = 1;
 	public float lifeTime = .2f; // Must be relative depending target distance
-	float skinWidth = .1f; // Used to fix collision detection in very close range
 	public Enemy target;
 	private bool alreadyHit;
 

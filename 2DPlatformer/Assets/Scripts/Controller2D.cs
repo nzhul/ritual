@@ -10,6 +10,7 @@ public class Controller2D : RaycastController {
 	public CollisionInfo collisions;
 
 	public event Action OnEnemyCollision;
+	public event Action OnCollectableCollision;
 
 	[HideInInspector]
 	public Vector2 playerInput;
@@ -66,6 +67,7 @@ public class Controller2D : RaycastController {
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing* i);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+			RaycastHit2D collectableHit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collectableCollisionMask);
 
 			Debug.DrawRay(rayOrigin, Vector2.right * directionX * rayLength, Color.red);
 
@@ -109,6 +111,11 @@ public class Controller2D : RaycastController {
 				}
 				
 			}
+
+			if (collectableHit)
+			{
+				Destroy(collectableHit.transform.gameObject);
+			}
 		}
 	}
 
@@ -148,9 +155,20 @@ public class Controller2D : RaycastController {
 
 				if (enemyHit)
 				{
-					if (OnEnemyCollision != null)
+					if (enemyHit.transform.tag == "Enemy")
 					{
-						OnEnemyCollision();
+						if (OnEnemyCollision != null)
+						{
+							OnEnemyCollision();
+						}
+					}
+
+					if (enemyHit.transform.tag == "Coin")
+					{
+						if (OnCollectableCollision != null)
+						{
+							OnCollectableCollision();
+						}
 					}
 				}
 

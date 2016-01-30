@@ -12,6 +12,8 @@ public class Enemy : LivingEntity {
 	}
 
 	public State currentState;
+	public float enemySpeed = 5;
+	float direction = -1;
 	Transform target;
 	float gravity = 2f;
 	Vector3 velocity;
@@ -22,9 +24,8 @@ public class Enemy : LivingEntity {
 	{
 		base.Start();
 		controller = GetComponent<Controller2D>();
+		enemySpeed = -enemySpeed;
 	}
-
-	float direction = -5;
 
 	void Update()
 	{
@@ -32,14 +33,14 @@ public class Enemy : LivingEntity {
 		{
 			if (controller.collisions.left)
 			{
-				direction = 5;
+				enemySpeed = Mathf.Abs(enemySpeed);
 			}
 			else if (controller.collisions.right)
 			{
-				direction = -5;
+				enemySpeed = -enemySpeed;
 			}
 
-			velocity.x = direction;
+			velocity.x = enemySpeed;
 		}
 
 		velocity.y -= gravity * Time.deltaTime;
