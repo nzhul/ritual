@@ -18,12 +18,15 @@ public class Enemy : LivingEntity {
 	float gravity = 2f;
 	Vector3 velocity;
 
+	SpriteRenderer spriteRenderer;
+
 	Controller2D controller;
 
 	void Start()
 	{
 		base.Start();
 		controller = GetComponent<Controller2D>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		enemySpeed = -enemySpeed;
 	}
 

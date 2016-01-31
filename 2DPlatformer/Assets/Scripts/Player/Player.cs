@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Assets.Scripts.Player;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Controller2D))]
 [RequireComponent(typeof(AbilityManager))]
@@ -22,6 +23,9 @@ public class Player : MonoBehaviour {
 	public float wallSlideSpeedMax = 3;
 	public float wallStickTime = .25f;
 	float timeToWallUnstick;
+	bool IsThrowing = false;
+	float throwTime = .5f;
+	float throwStartTime;
 
 	float gravity;
 	float maxJumpVelocity;
@@ -86,6 +90,16 @@ public class Player : MonoBehaviour {
 
 	void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			SceneManager.LoadScene("Level2");
+		}
+
+		if (Time.time > throwStartTime + throwTime)
+		{
+			IsThrowing = false;
+		}
+
 		Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
 		if (Input.GetMouseButtonDown(0))
@@ -93,11 +107,20 @@ public class Player : MonoBehaviour {
 			Shoot();
 		}
 
-		if (velocity.y != 0)
+		if (Input.GetKeyDown(KeyCode.S))
 		{
-			animator.Play("NinjaJump");
+			controller.playerInput.y = -1;
 		}
-		else if (input.x != 0)
+		if (Input.GetKeyUp(KeyCode.S))
+		{
+			controller.playerInput.y = 0;
+		}
+
+		if (velocity.y != 0 && !IsThrowing)
+		{
+			animator.Play("PlayerJump");
+		}
+		else if (input.x != 0 && !IsThrowing)
 		{
 			if (input.x > 0)
 			{
@@ -107,11 +130,12 @@ public class Player : MonoBehaviour {
 			{
 				spriteRenderer.flipX = true;
 			}
-			animator.Play("NinjaRun");
+
+			animator.Play("PlayerRun");
 		}
-		else
+		else if(!IsThrowing)
 		{
-			animator.Play("NinjaIdle");
+			animator.Play("PlayerIdle");
 		}
 
 		int wallDirX = (controller.collisions.left) ? -1 : 1;
@@ -206,6 +230,9 @@ public class Player : MonoBehaviour {
 
 				Enemy theEnemy = closestEnemy.GetComponent<Enemy>();
 				newProjetile.target = theEnemy;
+				IsThrowing = true;
+				throwStartTime = Time.time;
+				animator.Play("PlayerThrow");
 			}
 		}
 	}

@@ -4,14 +4,12 @@ using System.Collections;
 public class StoryController : MonoBehaviour {
 
 	public GameObject[] introBackgrounds;
-	public GameObject[] introTexts;
 	public GameObject continueBtn;
 	int introIndex = 0;
 
 	void Start()
 	{
 		introBackgrounds[introIndex].SetActive(true);
-		introTexts[introIndex].SetActive(true);
 		introIndex++;
 	}
 
@@ -34,8 +32,6 @@ public class StoryController : MonoBehaviour {
 	{
 		introBackgrounds[introIndex - 1].SetActive(false);
 		introBackgrounds[introIndex].SetActive(true);
-		introTexts[introIndex - 1].SetActive(false);
-		introTexts[introIndex].SetActive(true);
 		introIndex++;
 	}
 }
